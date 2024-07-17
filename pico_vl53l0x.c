@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
@@ -31,7 +32,7 @@ VL53L0X_Dev_t gVL53L0XDevice;
 #define NUM_SENSORS         2
 #define DISTANCE            15
 
-#define TIME2SEND           1800          // seconds
+#define TIME2SEND           60          // seconds
 
 #define MUX_ADDR            _u(0x70)
 
@@ -134,15 +135,19 @@ void measure_detection(VL53L0X_Dev_t *pDevice){
 }
 
 void send_detection_times(){
+    int size = 50;
     static absolute_time_t reference2write = {0};
-    char output[50];
+    char output[size];
+    char final_output[size*NUM_SENSORS];
     if(absolute_time_diff_us(reference2write, get_absolute_time()) >= TIME2SEND*1000000) {
         for (int i = 0; i < NUM_SENSORS; i++) {
             //printf("Sensor %d - Tiempo de detección: %.6f segundos\n", i+1, sensors[i].detection_interval / 1000000.0);
-            snprintf(output, 50, "Sujeto %d: %f\n", i+1, sensors[i].detection_interval / 1000000.0);
-            uart_puts(UART_ID, output);
+            snprintf(output, size, "Sujeto %d: %.6f. ", i+1, sensors[i].detection_interval / 1000000.0);
+            strcat(final_output, output);
             sensors[i].detection_interval = 0; 
         }
+        strcat(final_output, "\n");
+        uart_puts(UART_ID, final_output);
         reference2write = get_absolute_time();
     }
 }
@@ -176,4 +181,3 @@ int main(void){
    }
     return 0;
 }
-

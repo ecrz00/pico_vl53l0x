@@ -16,14 +16,14 @@ SPI_MISO_PIN = Pin(19)
 SPI_SCK_PIN = Pin(18)
 SPI_CS_PIN = Pin(5, Pin.OUT, value=1) # Assign chip select (CS) pin (and start it high)
 
-uart   = UART(2, baudrate=BAUD_RATE, tx=UART_TX_PIN, rx=UART_RX_PIN, timeout=1, timeout_char=1)
+uart = None
 spi = SPI(1, baudrate=1000000, polarity=0, phase=0,bits=8, firstbit=SPI.MSB, sck = SPI_SCK_PIN, mosi=SPI_MOSI_PIN, miso = SPI_MISO_PIN) # Intialize SPI peripheral (start with 1 MHz)
 
 led_r = Pin(25, Pin.OUT, value = 1)
 led_b = Pin(4, Pin.OUT, value = 1)
 led_g = Pin(26, Pin.OUT, value = 1)
 
-bottomEnd, topEnd = '', ''
+reference_write, last_write = '', ''
 
 def connect_set_time(SSID, PASSWORD):
 	sta_if = network.WLAN(network.STA_IF)
@@ -37,12 +37,26 @@ def connect_set_time(SSID, PASSWORD):
 	RTC().init((year, month, mday, weekday, hour-6, minute, second, milisecond))
 #end def
 
-def getTime():
+def get_time():
 	tup = RTC().datetime()
 	fecha = str(tup[0]) + '/' + str(tup[1]) + '/' + str(tup[2])
 	hora  = str(tup[4]) + ':' + str(tup[5]) + ':' + str(tup[6])
 	tiempo = f'{fecha},{hora}'
 	return tiempo
+#end def
+
+def uart_handler(UART_RX_PIN):
+	line = uart.readline()
+	if line != None:
+		line = line.decode('utf-8')
+		line = line.strip()
+		write(line)
+#end def
+
+def uart_init():
+	global uart
+	uart = UART(2, baudrate=BAUD_RATE, tx=UART_TX_PIN, rx=UART_RX_PIN, timeout=1, timeout_char=1)
+	UART_RX_PIN.irq(handler = uart_handler, trigger = Pin.IRQ_FALLING)
 #end def
 
 def SDCard_init():
@@ -75,38 +89,31 @@ def process_string(string):
 #end def
 
 def write(data):
-	global bottomEnd, topEnd
-	topEnd = getTime()
-	info = f'Inicio: {bottomEnd}. Final: {topEnd}.'
+	global reference_write, last_write
+	last_write = get_time()
+	info = f'Inicio: {reference_write}. Final: {last_write}. '
 	info += process_string(data)
-	print(info)
+	#print(info)
 	try:
 		with open("/sd/ratitas.txt", "a") as file:
 			file.write(f'{info}\n')
 	except:
 		pass
-	bottomEnd = topEnd
+	reference_write = last_write
 #end def
 
 def main():
-	global bottomEnd
+	global reference_write
 	connect_set_time("INFINITUM79CE","uX7PEv7w0I") 
 	SDCard_init()
-	data = ''
+	uart_init()
 	try:
 		open("/sd/ratitas.txt", "x")
 	except:
 		pass
-	bottomEnd = getTime()
+	reference_write = get_time()
 	while True:
-		line = uart.readline()
-		if not line: continue
-		line = line.decode('utf-8')
-		line = line.strip()
-		data += f' {line}.'
-		if(f'Sujeto {NUM_SENSORS}:' in line):
-			write(data)
-			data = ''
+		pass
 #end def
 
 if __name__ == '__main__':
