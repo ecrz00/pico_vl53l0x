@@ -1,0 +1,39 @@
+body{
+	background:          rgb(20, 0, 36);
+	background:          linear-gradient(180deg, rgb(45, 2, 100) 0%, rgb(55, 16, 161) 25%, rgb(30, 6, 87) 90%);
+	width:               100vw;
+	height:              100vw;
+	overflow-x:          hidden;
+	overflow-y:          hidden;
+	font-family:         Tahoma, sans-serif;
+}
+
+.container{
+	width:               50vw;
+	margin:              0 auto;
+	padding:             0 20px 10px 20px;
+	border:              3px solid white;
+	border-radius:       15px;
+	box-shadow:          5px 5px 5px black;
+	background:          whitesmoke;
+}
+
+.container header{
+/*	width:               100%;*/
+/*	margin:              0 10px;*/
+	border-bottom:       2px solid rgb(39, 4, 74);
+	border-bottom:       2px solid linear-gradient(0deg, rgb(61, 9, 121) 0%, rgb(53, 5, 88) 50%, rgb(59, 9, 121) 0%);
+}
+.container main{
+	margin:              10px 0;
+}
+.title{
+	font-weight:         bold;
+	font-size:           x-large;
+	text-align:          center;
+	padding-bottom:      0;
+	margin-bottom:       0;
+}
+.info {
+    margin-top: 20px;
+}

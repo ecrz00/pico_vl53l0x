@@ -32,7 +32,7 @@ VL53L0X_Dev_t gVL53L0XDevice;
 #define NUM_SENSORS         2
 #define DISTANCE            15
 
-#define TIME2SEND           60          // seconds
+#define TIME2SEND           1800          // seconds
 
 #define MUX_ADDR            _u(0x70)
 
@@ -82,7 +82,7 @@ VL53L0X_Error continuousRanging(VL53L0X_Dev_t *pDevice, uint16_t *ContinuousData
 }
 
 void I2C1_init(){
-    i2c_init(i2c1, 400 * 1000);
+    i2c_init(i2c1, I2C_SPEED * 1000);
     gpio_set_function(SDA_PIN_1, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN_1, GPIO_FUNC_I2C);
     gpio_pull_up(SDA_PIN_1);
@@ -173,7 +173,6 @@ int main(void){
     //continuousRanging(pDevice, continuousRingingValue, &validCount);
     I2C1_init();
     UART_init();
-    //send_info();
     vl53l0x_init_all(pDevice);
     while(1){ 
         measure_detection(pDevice);
@@ -181,3 +180,4 @@ int main(void){
    }
     return 0;
 }
+
