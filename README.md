@@ -18,6 +18,21 @@ The ESP32.py performs the following tasks:
 * Writes the information from each sensor, including the measuring interval, to an SD card.
 
 The information written to the SD card is the same displayed on the web page. The sdcard.py code was obtained from [micropython-lib](https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py)
+#First setup
+
+If it's the first time using the tool, is recommended to follow the next steps depending on the OS:
+
+##Windows 
+
+In order to make compatible the OS with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
+1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer.
+
+### Commond issues
+* If the installation has finished but WSL is not opening, verify if `Windows Subsystem for Linux` is enable.
+   1. Go to Control Panel > Programs > Turn Windows features on or off.
+   2. Make sure `Windows Subsystem for Linux` is checked and enabled.
+   3. Click on accept and wait till changes are applied.
+   4. Restart the computer.
 
 # Future enhancements
  
