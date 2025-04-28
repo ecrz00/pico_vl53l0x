@@ -18,21 +18,55 @@ The ESP32.py performs the following tasks:
 * Writes the information from each sensor, including the measuring interval, to an SD card.
 
 The information written to the SD card is the same displayed on the web page. The sdcard.py code was obtained from [micropython-lib](https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py)
-#First setup
+# First setup
 
-If it's the first time using the tool, is recommended to follow the next steps depending on the OS:
+If it is the first time creating a working enviroment for PicoSDK, is recommended to follow the next steps:
 
-##Windows 
-
-In order to make compatible the OS with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
+In order to make compatible Windows with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
 1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer.
+2. Open WSL, create and add a password to a default Unix user account.
+3. It is recommended to use `sudo apt update && sudo apt upgrade` with the Ubuntu terminal.
 
+Now, the PicoSDK will be installed:
+1. Install the tool chain for ARM Cortex M series, with the WSL terminal do
+   `sudo apt install gcc-arm-none-eabi`
+   Verify the installation with
+   `arm-none-eabi-gcc --version`
+2. Install the packages to compile the PicoSDK
+   `sudo apt install build-essential git cmake gtkterm`
+3. Create a directory where all the files will be located. Do:
+   `mkdir ~/pico`, to create the directory
+   `cd ~/pico`,  to change the work directory
+4. Clone the pico-sdk git repository:
+   `git clone https://github.com/raspberrypi/pico-sdk.git --branch master`
+   `cd pico-sdk`
+   `git submodule update --init`
+   Wait patiently:)
+5. Clone the pico-examples git repository:
+   `cd ..`
+   `git clone https://github.com/raspberrypi/pico-examples.git --branch master`
+6. Create a build directory for the example
+   `cd pico-examples`
+   `mkdir build`
+   `cd build`
+7. Set the pico-sdk path:
+   `export PICO_SDK_PATH=../../pico-sdk`
+8. Use cmake to build the directory
+  `cmake ..`
+9. Wait till process ends
+
+Now, to verify everything works properly 
+   
+   
 ### Commond issues
-* If the installation has finished but WSL is not opening, verify if `Windows Subsystem for Linux` is enable.
-   1. Go to Control Panel > Programs > Turn Windows features on or off.
-   2. Make sure `Windows Subsystem for Linux` is checked and enabled.
-   3. Click on accept and wait till changes are applied.
-   4. Restart the computer.
+* If the installation has finished but WSL is not opening, check the following:
+   * Verify if `Windows Subsystem for Linux` and `Virtual Machine Platform` are enable.
+      1. Go to Control Panel > Programs > Turn Windows features on or off.
+      2. Make sure `Windows Subsystem for Linux` and `Virtual Machine Platform` are checked and enabled.
+      3. Click on accept and wait till changes are applied.
+      4. Restart the computer.
+   * Check WSL version
+     1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.
 
 # Future enhancements
  
