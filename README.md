@@ -95,10 +95,10 @@ The uf2 file, once uploaded, is automatically programmed to the RP2040, so every
 
 Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
 
-## Thonny 
+## ESP32 and Thonny
 
 The ESP32 use Micropython for its programming. If its the first time working with a ESP32 and Micropython, is recommended to follow the next steps: 
-1. Install [Python](https://www.python.org/downloads/), during installation check Add Python to PATH and continue as always.
+1. Install [Python](https://www.python.org/downloads/), during installation mark the checkbox **Add Python to PATH** and continue as always.
 2. Open PowerShell and install *esptool* doing:
    
    `pip install esptool`
@@ -121,9 +121,6 @@ The ESP32 use Micropython for its programming. If its the first time working wit
    
 Everything is ready to work with the ESP32 and RP2040
 
-
-### Pico VL53L0X project
-
 ### Uploading files into DualMCU
 
    Some microcontrollers, as the RP2040, have a bootloader mode which allow them to be recognized as a USB Mass Storage. 
@@ -136,8 +133,7 @@ Everything is ready to work with the ESP32 and RP2040
    4. Drag and drop or copy and paste the uf2 file into the device. Actomatically the volume should be closed and the program starts.
 
 For the ESP32 
-   
-   
+
 ## Commond issues
 * If the installation has finished but WSL is not opening, check the following:
    * Verify if `Windows Subsystem for Linux` and `Virtual Machine Platform` are enable.
@@ -148,6 +144,10 @@ For the ESP32
    * Check WSL version
      1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.   
 * For any problem uploading files into both microcontrollers
+
+# Pico VL53L0X project setup
+   
+
 
 # Future enhancements
  
