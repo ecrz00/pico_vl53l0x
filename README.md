@@ -20,11 +20,9 @@ The ESP32.py performs the following tasks:
 The information written to the SD card is the same displayed on the web page. The sdcard.py code was obtained from [micropython-lib](https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py)
 
 
-# How to 
+# First setup
 
-## First setup
-
-### PicoSDK and Thonny installation
+## PicoSDK
 
 Considering is the first time working with the PicoSDK and a RP2040, is recommended to follow the next steps:
 
@@ -97,7 +95,9 @@ The uf2 file, once uploaded, is automatically programmed to the RP2040, so every
 
 Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
 
-On the other hand, the ESP32 use Micropython for its programming. If its the first time working with a ESP32 and Micropython, is recommended to follow the next steps: 
+## Thonny 
+
+The ESP32 use Micropython for its programming. If its the first time working with a ESP32 and Micropython, is recommended to follow the next steps: 
 1. Install [Python](https://www.python.org/downloads/), during installation check Add Python to PATH and continue as always.
 2. Open PowerShell and install *esptool* doing:
    
