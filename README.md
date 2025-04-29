@@ -147,7 +147,30 @@ For the ESP32
 
 # Pico VL53L0X project setup
    
+1. Clone or download this git repository.
+2. Open WSL and move to pico (`cd pico`) create the directory and move into it with:
+   
+   `mkdir pico_vl53l0x`
+   
+   `cd pico_vl53l0x`
+   
+3. Place all the content from the project to the pico_vl53l0x folder.
+4. Copy the pico_sdk_import.cmake file into the pico_vl53l0x folder using
 
+   ` cp ../pico-sdk/external/pico_sdk_import.cmake .`
+   
+5. Create a build folder and move into it using
+
+   `mkdir build`
+
+   `cd build`
+
+6. Export the pico-sdk path with
+
+   `export PICO_SDK_PATH=../../pico-sdk`
+
+7. Do `cmake ..`
+8. Then build the project with `make`
 
 # Future enhancements
  
