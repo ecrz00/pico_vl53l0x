@@ -19,14 +19,14 @@ The ESP32.py performs the following tasks:
 
 The information written to the SD card is the same displayed on the web page. The sdcard.py code was obtained from [micropython-lib](https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py)
 
-# How to use DualMC
 
-Work with this tool required:
+# How to 
 
+## First setup
 
-# First setup
+### PicoSDK and Thonny installation
 
-If it is the first time creating a working enviroment for PicoSDK, is recommended to follow the next steps:
+Considering is the first time working with the PicoSDK and a RP2040, is recommended to follow the next steps:
 
 In order to make compatible Windows with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
 1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer.
@@ -91,8 +91,20 @@ Wait till process ends.
 
     `make`
 
-To verify the work environment, upload the blink.uf2
-   
+   Inside the pico/pico-example/build directory are all the build projects, inside each of them a .uf2 file is located.
+
+The uf2 file, once uploaded, is automatically programmed to the RP2040, so everytime the RP2040 is powered the program starts to work.
+
+Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
+
+### Adding the project into the pico path
+
+### Uploading files into DualMCU
+
+   Some microcontrollers, as the RP2040, have a bootloader mode which allow them to be recognized as a USB Mass Storage. 
+   1. Press and hold the Boot button on the board.
+
+      ![DualMCU boot](https://github.com/user-attachments/assets/72a25425-98ab-444e-9838-491bb990f8c5)
    
 ### Commond issues
 * If the installation has finished but WSL is not opening, check the following:
@@ -107,3 +119,4 @@ To verify the work environment, upload the blink.uf2
 # Future enhancements
  
 In the future it will support eight seensors (four on I2C0 and four on I2C1) using the RP2040's cores.
+
