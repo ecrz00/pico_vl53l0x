@@ -87,7 +87,7 @@ Now, the PicoSDK will be installed:
   
 Wait till process ends.
 
-9. Build every c-code based examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
+9. Build every c-code examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
 
     `make`
 
@@ -97,7 +97,32 @@ The uf2 file, once uploaded, is automatically programmed to the RP2040, so every
 
 Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
 
-### Adding the project into the pico path
+On the other hand, the ESP32 use Micropython for its programming. If its the first time working with a ESP32 and Micropython, is recommended to follow the next steps: 
+1. Install [Python](https://www.python.org/downloads/), during installation check Add Python to PATH and continue as always.
+2. Open PowerShell and install *esptool* doing:
+   
+   `pip install esptool`
+
+3. Now, is necesarry to erase the flash on the ESP32. Do:
+
+   `esptool --chip esp32 --port com# erase_flash`
+
+   **Note**: Replace the hash (#) with the COM port where the board is connected. Verify that using the Device Manager.
+
+4. Download the latest version of [Micropython](https://micropython.org/download/ESP32_GENERIC/), check the firmware section and download the .bin file.
+5. Move the .bin file into C:\Users\yourUser
+6. In PowerShell do
+    `esptool --chip esp32 --port com# --baud 460800 write_flash -z 0x1000 ESP32_GENERIC-20250415-v1.25.0.bin`
+   **Note:** for any other version, replace the  *ESP32_GENERIC-20250415-v1.25.0.bin* for the downloaded bin file in step 4. As mentioned, replace the hash (#) with the COM port where the board is connected.
+8. Install [Thonny](https://thonny.org/)
+9. Open the IDE and go to
+
+   Run > Configure interpreter and select MicroPython (ESP32) and the respective USB Serial @ COM  from both dropdown menus. 
+   
+Everything is ready to work with the ESP32 and RP2040
+
+
+### Pico VL53L0X project
 
 ### Uploading files into DualMCU
 
@@ -105,8 +130,15 @@ Before continuing with the project itself, is recommended to upload an example c
    1. Press and hold the Boot button on the board.
 
       ![DualMCU boot](https://github.com/user-attachments/assets/72a25425-98ab-444e-9838-491bb990f8c5)
+
+   2. Without releasing the buttonm, connect the board into the computer.
+   3. After a few seconds, the computer will recognize the board as a mass storage device. The device's names should be RPI-RP2 or similar.
+   4. Drag and drop or copy and paste the uf2 file into the device. Actomatically the volume should be closed and the program starts.
+
+For the ESP32 
    
-### Commond issues
+   
+## Commond issues
 * If the installation has finished but WSL is not opening, check the following:
    * Verify if `Windows Subsystem for Linux` and `Virtual Machine Platform` are enable.
       1. Go to Control Panel > Programs > Turn Windows features on or off.
@@ -114,7 +146,8 @@ Before continuing with the project itself, is recommended to upload an example c
       3. Click on accept and wait till changes are applied.
       4. Restart the computer.
    * Check WSL version
-     1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.
+     1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.   
+* For any problem uploading files into both microcontrollers
 
 # Future enhancements
  
