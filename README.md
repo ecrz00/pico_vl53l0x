@@ -13,7 +13,7 @@ The pico_vl52l0x.c performs the following tasks:
 
 The ESP32.py performs the following tasks:
 * Connects to internet to run a RTC with the current local time
-* Creates a web server to monitor the state of the program easier
+* Creates a web server to monitor the state of the program
 * Read the UART line using a TX interrupt and decodes it
 * Writes the information from each sensor, including the measuring interval, to an SD card.
 
@@ -29,20 +29,24 @@ Considering is the first time working with the PicoSDK and a RP2040, is recommen
 In order to make compatible Windows with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
 1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer.
 2. Open WSL, create and add a password to a default Unix user account.
-3. It is recommended to use `sudo apt update && sudo apt upgrade` with the Ubuntu terminal.
+3. It is recommended to use
+   
+   `$ sudo apt update && sudo apt upgrade`
+   
+   with the Ubuntu terminal.
 
 Now, the PicoSDK will be installed:
 1. Install the tool chain for ARM Cortex M series, with the WSL terminal do:
 
-   `sudo apt install gcc-arm-none-eabi`
+   `$ sudo apt install gcc-arm-none-eabi`
    
    Verify the installation with
    
-   `arm-none-eabi-gcc --version`
+   `$ arm-none-eabi-gcc --version`
    
 2. Install the packages to compile the PicoSDK:
    
-   `sudo apt install build-essential git cmake gtkterm`
+   `$ sudo apt install build-essential git cmake gtkterm`
    
 3. Create a directory where all the files will be located. Do:
 
@@ -81,9 +85,9 @@ Now, the PicoSDK will be installed:
    
 8. Use **cmake** to build the directory:
     
-  `cmake ..`
+      `cmake ..`
   
-Wait till process ends.
+   Wait till process ends.
 
 9. Build every c-code examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
 
@@ -107,7 +111,7 @@ The ESP32 use Micropython for its programming. If its the first time working wit
 
    `esptool --chip esp32 --port com# erase_flash`
 
-   **Note**: Replace the hash (#) with the COM port where the board is connected. Verify that using the Device Manager.
+   **Note**: Replace the hash (#) with the COM port in which the board is connected. Verify the port using the Device Manager.
 
 4. Download the latest version of [Micropython](https://micropython.org/download/ESP32_GENERIC/), check the firmware section and download the .bin file.
 5. Move the .bin file into C:\Users\yourUser
@@ -117,7 +121,7 @@ The ESP32 use Micropython for its programming. If its the first time working wit
 8. Install [Thonny](https://thonny.org/)
 9. Open the IDE and go to
 
-   Run > Configure interpreter and select MicroPython (ESP32) and the respective USB Serial @ COM  from both dropdown menus. 
+   **Run** > **Configure interpreter** and select MicroPython (ESP32) and the respective USB Serial @ COM from both dropdown menus. 
    
 Everything is ready to work with the ESP32 and RP2040
 
@@ -130,9 +134,9 @@ Everything is ready to work with the ESP32 and RP2040
 
    2. Without releasing the buttonm, connect the board into the computer.
    3. After a few seconds, the computer will recognize the board as a mass storage device. The device's names should be RPI-RP2 or similar.
-   4. Drag and drop or copy and paste the uf2 file into the device. Actomatically the volume should be closed and the program starts.
+   4. Move the uf2 file into the device. Automatically the volume should be closed and the program starts.
 
-For the ESP32 
+For the ESP32, just run the script once the interpreter has been configure.
 
 ## Commond issues
 * If the installation has finished but WSL is not opening, check the following:
