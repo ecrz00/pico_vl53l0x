@@ -21,13 +21,20 @@ The information written to the SD card is the same displayed on the web page. Th
 
 
 # First setup
+This section is intended to guide users who have never worked with the pico-sdk for the RP2040 and MicroPython through a step-by-step description.
 
-## PicoSDK
+### PicoSDK
 
-Considering is the first time working with the PicoSDK and a RP2040, is recommended to follow the next steps:
+In order to make compatible Windows with some commands, is required to create a Linux environment. For this guide, WSL will be used.
+1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer. If WSL is not working, do the following:
+   *  Verify if `Windows Subsystem for Linux` and `Virtual Machine Platform` are enable.
+      1. Go to Control Panel > Programs > Turn Windows features on or off.
+      2. Make sure `Windows Subsystem for Linux` and `Virtual Machine Platform` are checked and enabled.
+      3. Click on accept and wait till changes are applied.
+      4. Restart the computer.
+   * Check WSL version
+      1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.
 
-In order to make compatible Windows with some commands, is required to create a Linux environment. For this guide, WSL will be used. Is recommended that, if any issue appears during the steps, check the [Commmon issues](#commond-issues) section
-1. Open PowerShell and run `wsl --install`. Once the installation has finished, restart the computer.
 2. Open WSL, create and add a password to a default Unix user account.
 3. It is recommended to use
    
@@ -64,32 +71,37 @@ Now, the PicoSDK will be installed:
    
    Wait patiently:)
 
-   
-5. Clone the pico-examples git repository:
-    
+5. Move to pico directory using
+
    `cd ..`
+   
+6. Clone the pico-examples git repository:
    
    `git clone https://github.com/raspberrypi/pico-examples.git --branch master`
 
-6. Create a build directory for the example:
+7. Move to pico-examples and create a folder called **build**:
 
    `cd pico-examples`
    
    `mkdir build`
    
    `cd build`
+
+**Note: The folder organization must be as shown below.**
+
+   ![Image](https://github.com/user-attachments/assets/e5c808b8-a6f6-4310-bcd8-733905a04ac5)
    
-7. Set the pico-sdk path:
+8. Set the pico-sdk path inside build:
 
    `export PICO_SDK_PATH=../../pico-sdk`
    
-8. Use **cmake** to build the directory:
+9. Use **cmake** to build the directory:
     
       `cmake ..`
   
    Wait till process ends.
 
-9. Build every c-code examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
+10. Build every c-code examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
 
     `make`
 
@@ -99,9 +111,8 @@ The uf2 file, once uploaded, is automatically programmed to the RP2040, so every
 
 Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
 
-## ESP32 and Thonny
+### MicroPython and Thonny
 
-The ESP32 use Micropython for its programming. If its the first time working with a ESP32 and Micropython, is recommended to follow the next steps: 
 1. Install [Python](https://www.python.org/downloads/), during installation mark the checkbox **Add Python to PATH** and continue as always.
 2. Open PowerShell and install *esptool* doing:
    
@@ -116,8 +127,12 @@ The ESP32 use Micropython for its programming. If its the first time working wit
 4. Download the latest version of [Micropython](https://micropython.org/download/ESP32_GENERIC/), check the firmware section and download the .bin file.
 5. Move the .bin file into C:\Users\yourUser
 6. In PowerShell do
+
+
     `esptool --chip esp32 --port com# --baud 460800 write_flash -z 0x1000 ESP32_GENERIC-20250415-v1.25.0.bin`
+   
    **Note:** for any other version, replace the  *ESP32_GENERIC-20250415-v1.25.0.bin* for the downloaded bin file in step 4. As mentioned, replace the hash (#) with the COM port where the board is connected.
+   
 8. Install [Thonny](https://thonny.org/)
 9. Open the IDE and go to
 
@@ -127,7 +142,7 @@ Everything is ready to work with the ESP32 and RP2040
 
 ### Uploading files into DualMCU
 
-   Some microcontrollers, as the RP2040, have a bootloader mode which allow them to be recognized as a USB Mass Storage. 
+   For the **RP2040**,
    1. Press and hold the Boot button on the board.
 
       ![DualMCU boot](https://github.com/user-attachments/assets/72a25425-98ab-444e-9838-491bb990f8c5)
@@ -136,20 +151,11 @@ Everything is ready to work with the ESP32 and RP2040
    3. After a few seconds, the computer will recognize the board as a mass storage device. The device's names should be RPI-RP2 or similar.
    4. Move the uf2 file into the device. Automatically the volume should be closed and the program starts.
 
-For the ESP32, just run the script once the interpreter has been configure.
+For the **ESP32**,
+1. With Thonny, select **Save as...**, then choose MicroPython device
+2. Replace boot.py with the desired script. If boot.py requires another scripts to work properly, save them inside the device.
 
-## Commond issues
-* If the installation has finished but WSL is not opening, check the following:
-   * Verify if `Windows Subsystem for Linux` and `Virtual Machine Platform` are enable.
-      1. Go to Control Panel > Programs > Turn Windows features on or off.
-      2. Make sure `Windows Subsystem for Linux` and `Virtual Machine Platform` are checked and enabled.
-      3. Click on accept and wait till changes are applied.
-      4. Restart the computer.
-   * Check WSL version
-     1. Use ` wsl --list --verbose` to verify the distribution's version. If no distribution is installed, use `wsl.exe --install Ubuntu-24.04` to install Ubuntu.   
-* For any problem uploading files into both microcontrollers
-
-# Pico VL53L0X project setup
+## Pico VL53L0X project setup
    
 1. Clone or download this git repository.
 2. Open WSL and move to pico (`cd pico`) create the directory and move into it with:
