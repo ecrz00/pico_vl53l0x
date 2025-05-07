@@ -111,6 +111,8 @@ The uf2 file, once uploaded, is automatically programmed to the RP2040, so every
 
 Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to upload files, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu) section.
 
+For more information check the [Getting started with Raspberry Pi](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf) guide.
+
 ### MicroPython and Thonny
 
 1. Install [Python](https://www.python.org/downloads/), during installation mark the checkbox **Add Python to PATH** and continue as always.
@@ -162,7 +164,7 @@ The initial design was based on an existing development board combined with off-
 ### Bill of Material
 Below are the required materials. The provided links are specific to Mexico. 
 * [DualMCU](https://uelectronics.com/producto/unit-dualmcu-esp32-rp2040-tarjeta-de-desarrollo/)
-* [ToF sensor](https://uelectronics.com/producto/vl53l0x-medidor-de-distancia-laser-i2c-940nm-tof/)
+* [ToF VL53L0X sensor](https://uelectronics.com/producto/vl53l0x-medidor-de-distancia-laser-i2c-940nm-tof/)
 * [I2C mux TCA9548A](https://www.amazon.com.mx/dp/B08GZGCKLM?ref=ppx_yo2ov_dt_b_fed_asin_title)
 * Various materials were used, such as a breadboard, wires, pins, etc.
 
@@ -192,6 +194,8 @@ Below are the required materials. The provided links are specific to Mexico.
 
 7. Do `cmake ..`
 8. Then build the project with `make`
+
+For more information check the [Getting started with Raspberry Pi](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf) guide.
 
 # Future enhancements
  
