@@ -101,15 +101,15 @@ Now, the PicoSDK will be installed:
   
    Wait till process ends.
 
-10. Build every c-code examples using **make**. Ensure to be located in **\pico\pico-examples** with the WSL terminal, then do
+10. Build every c-code examples using 
 
     `make`
 
-   Inside the pico/pico-example/build directory are all the build projects, inside each of them a .uf2 file is located.
+   Inside the pico/pico-example/build directory are all the build projects,every directory store a uf2 file.
 
 The uf2 file, once uploaded, is automatically programmed to the RP2040, so everytime the RP2040 is powered the program starts to work.
 
-Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to uploaded, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu)
+Before continuing with the project itself, is recommended to upload an example code into the RP2040, for example the blink.uf2. To learn how to upload files, check the [Uploading file into DualMCU](#uploading-files-into-dualmcu) section.
 
 ### MicroPython and Thonny
 
@@ -155,7 +155,18 @@ For the **ESP32**,
 1. With Thonny, select **Save as...**, then choose MicroPython device
 2. Replace boot.py with the desired script. If boot.py requires another scripts to work properly, save them inside the device.
 
-## Pico VL53L0X project setup
+# Pico VL53L0X project
+This project was designed to measure the time test subjects—in this case, rats—spend feeding at their food dispensers. Its purpose is to provide an accessible solution for experiments focused on diets and circadian rhythms, using widely known microcontrollers and commercially available, easy-to-source materials.
+The initial design was based on an existing development board combined with off-the-shelf sensors.
+
+### Bill of Material
+Below are the required materials. The provided links are specific to Mexico. 
+* [DualMCU](https://uelectronics.com/producto/unit-dualmcu-esp32-rp2040-tarjeta-de-desarrollo/)
+* [ToF sensor](https://uelectronics.com/producto/vl53l0x-medidor-de-distancia-laser-i2c-940nm-tof/)
+* [I2C mux TCA9548A](https://www.amazon.com.mx/dp/B08GZGCKLM?ref=ppx_yo2ov_dt_b_fed_asin_title)
+* Various materials were used, such as a breadboard, wires, pins, etc.
+
+## First setup
    
 1. Clone or download this git repository.
 2. Open WSL and move to pico (`cd pico`) create the directory and move into it with:
