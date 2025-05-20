@@ -22,6 +22,11 @@ The program is structured to:
 - Use onboard LEDs to signal detection state for each sensor.
 - Periodically send detection times through UART based on elapsed time.
 
+Changelog:
+- v2.0.0
+    - The number of decimals were reduced to 4 instead of 6
+    - Automatically calculate the buffer size for each sensor and for the final output. It takes the value of NUM_SENSORS, the decimals used and the additional characters used.asm
+
 All timing operations rely on the Raspberry Pi Pico SDK's `absolute_time_t` API to ensure accurate microsecond resolution for measuring presence durations.
 */
 
@@ -145,42 +150,25 @@ void vl53l0x_init_all(VL53L0X_Dev_t *pDevice){
     }
 }
 
-/*void process_sensor(VL53L0X_Dev_t *pDevice, Sensor *sensor){
-    select_mux_channel(sensor->mux_channel); // Select the corresponding I2C multiplexer channel
-    VL53L0X_Error status = singleRanging(pDevice, &sensors->distance); // Perform a single measurement and store the result in 'distance'
-    absolute_time_t current_time = get_absolute_time();  // Get the current timestamp
-    int64_t time_diff = absolute_time_diff_us(sensors->last_measurement, current_time); /// Calculate the time elapsed since the last measurement
-    // If the measurement was successful and the detected distance is below the defined threshold
-    if (status == VL53L0X_ERROR_NONE){ 
-        if (sensor->distance < THRESHOLD*10){ 
-            sensor->detection_interval += time_diff;
-            sensor->is_detecting = true;
-        }else {
-            sensor->is_detecting = false;
-        }
-    }
-    sensor[i].last_measurement = current_time; // Update the last measurement time
-}*/
-
 void process_sensor(VL53L0X_Dev_t *pDevice, Sensor *sensor, int led_pin) {
-    select_mux_channel(sensor->mux_channel);
-    VL53L0X_Error status = singleRanging(pDevice, &sensor->distance);
-    absolute_time_t current_time = get_absolute_time();
-    int64_t time_diff = absolute_time_diff_us(sensor->last_measurement, current_time);
+    select_mux_channel(sensor->mux_channel); // Select the appropriate channel on the I2C multiplexer for this sensor
+    VL53L0X_Error status = singleRanging(pDevice, &sensor->distance); // Perform a single distance measurement and store the result
+    absolute_time_t current_time = get_absolute_time(); // Get the current time in microseconds
+    int64_t time_diff = absolute_time_diff_us(sensor->last_measurement, current_time); // Calculate the time since the last measurement
 
     if (status == VL53L0X_ERROR_NONE) {
-        if (sensor->distance < THRESHOLD * 10) {
-            sensor->detection_interval += time_diff;
+        if (sensor->distance < THRESHOLD * 10) { // If the measured distance is below the threshold
+            sensor->detection_interval += time_diff; // Accumulate the duration of detected presence
             if (!sensor->is_detecting) {
-                sensor->is_detecting = true;
-                gpio_put(led_pin, 1);
+                sensor->is_detecting = true; // Mark the sensor as currently detecting
+                gpio_put(led_pin, 1); // Turn on the corresponding LED
             }
         } else if (sensor->is_detecting) {
-            sensor->is_detecting = false;
-            gpio_put(led_pin, 0);
+            sensor->is_detecting = false; // Mark the sensor as no longer detecting
+            gpio_put(led_pin, 0); // Turn off the corresponding LED
         }
     }
-    sensor->last_measurement = current_time;
+    sensor->last_measurement = current_time; // Update the timestamp of the last measurement
 }
 
 //----------- funtion that handles the measurement ----------
@@ -190,64 +178,61 @@ void measure_detection(VL53L0X_Dev_t *pDevice){
     }
 }
 
-/*void send_detection_times(){
-    int size = 25;
-    static absolute_time_t reference2write = {0}; 
-    char output[size]; // Temporary buffer for each sensor's output string
-    char final_output[size*NUM_SENSORS]; // buffer to hold all sensor strings
-    final_output[0] = '\0'; // Ensure the final_output starts as an empty string
-
-    // Check if enough time has passed to send the information
-    if(absolute_time_diff_us(reference2write, get_absolute_time()) >= TIME2SEND*1000000) { 
-        for (int i = 0; i < NUM_SENSORS; i++) {
-            //printf("Sensor %d - Tiempo de detección: %.6f segundos\n", i+1, sensors[i].detection_interval / 1000000.0);
-            if(i< NUM_SENSORS - 1)
-                snprintf(output, size, "%.6f,", sensors[i].detection_interval / 1000000.0); //snprintf builds a formatted string with the detection time.
-            else 
-                snprintf(output, size, "%.6f", sensors[i].detection_interval / 1000000.0); //snprintf builds a formatted string with the detection time.
-            strcat(final_output, output); // strcat appends the 'output' string to the end of 'final_output'
-            sensors[i].detection_interval = 0; // Reset the detection interval after sending
-        }
-        strcat(final_output, "\n"); // Add a newline at the end of the full message
-        uart_puts(UART_ID, final_output); // Send the complete string over UART
-        reference2write = get_absolute_time(); // Update the reference time for the next transmission
+size_t get_csv_buffer_size(){
+    int digits_before_dot = 1;  
+    int digits_after_dot = 4; //due to %.4f format  
+    int decimal_point = 1;
+    int new_line_char = 1;
+    int null_termination = 1;
+    int comma = 1;
+    uint32_t temp = TIME2SEND;
+    while(temp >= 10){
+        temp /= 10;
+        digits_before_dot++;
     }
-}*/
+    int per_sensor = digits_before_dot + decimal_point + digits_after_dot + comma;
+    int last_sensor = digits_before_dot + decimal_point + digits_after_dot;
+    size_t total = per_sensor * (NUM_SENSORS - 1) + last_sensor + new_line_char + null_termination;
 
-void build_csv(char *buffer, size_t buffer_size){
-    buffer[0] = '\0';
-    char temp[25];
+    return total;
+}
+
+void build_csv(char *buffer, size_t buffer_size) {
     size_t offset = 0;
-    for(int i = 0; i < NUM_SENSORS; i++){
+
+    for (int i = 0; i < NUM_SENSORS; i++) {
         float seconds = sensors[i].detection_interval / 1000000.0;
-        if(i < NUM_SENSORS -1)
-            snprintf(temp, sizeof(temp), "%.6f,", seconds);
+
+        // Write formatted time into buffer directly at offset
+        int written;
+        if (i < NUM_SENSORS - 1)
+            written = snprintf(buffer + offset, buffer_size - offset, "%.4f,", seconds);
         else
-            snprintf(temp, sizeof(temp), "%.6f", seconds);
-        size_t temp_len = strlen(temp);
-        if (offset + temp_len + 2 >= buffer_size)  // +2 for '\n' and '\0'
-            break;  // Prevent overflow
-        strcat(buffer, temp);
-        offset += temp_len;
-        sensors[i].detection_interval = 0;    
+            written = snprintf(buffer + offset, buffer_size - offset, "%.4f", seconds);
+        // Check for overflow or snprintf error
+        if (written < 0 || (size_t)written >= buffer_size - offset)
+            break;
+        offset += written;
+        sensors[i].detection_interval = 0; // Reset after reading
     }
-    if (offset + 2 < buffer_size)
-        strcat(buffer, "\n");
+    // Append newline if there is still space
+    if (offset + 1 < buffer_size) {
+        buffer[offset++] = '\n';
+        buffer[offset] = '\0'; // Null-terminate
+    }
 }
 
 void send_detection_times(){
-    static absolute_time_t reference2write = {0}; 
-    char final_output[NUM_SENSORS * 25]; // Suficiente para todos los sensores
-
+    static absolute_time_t reference2write = {0}; // Timestamp of the last UART transmission
+    size_t buffer_size = get_csv_buffer_size();
+    char final_output[buffer_size]; // Enough space to store all detection times in CSV format
+    // Check if TIME2SEND seconds have passed since the last transmission
     if (absolute_time_diff_us(reference2write, get_absolute_time()) >= TIME2SEND * 1000000) {
-        build_csv(final_output, sizeof(final_output));
-        uart_puts(UART_ID, final_output);
-        reference2write = get_absolute_time();
+        build_csv(final_output, buffer_size); // Generate CSV string of detection intervals
+        uart_puts(UART_ID, final_output); // Send the result over UART
+        reference2write = get_absolute_time(); // Update the timestamp for the next scheduled transmission
     }
 }
-
-
-
 
 int main(void){
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
